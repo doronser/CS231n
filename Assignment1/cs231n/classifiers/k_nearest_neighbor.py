@@ -103,7 +103,8 @@ class KNearestNeighbor(object):
             #######################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            # due to python broadcasting, X[i] will be stacked to match the size of X_train
+            dists[i,:]=np.sqrt(np.sum(np.square(self.X_train-X[i].reshape(1,3072)),axis=1 ) )
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
@@ -133,7 +134,27 @@ class KNearestNeighbor(object):
         #########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        # the 1st trick is to open the brackets in the L2 norm formula
+        #a=x
+        #b=x_train
+        # L2(a,b)=sqrt(sum((a-b)**2))=sqrt(sum(a^2-2ab+b^2))=sqrt(sum(a^2)-2a*(bT)+sum(b^2))
+        # and the calculate each element sepratly
+        # the squared elements are the squared row-wise L2 norm of each matrix
+        # the mixed element is the dot product of both matrices
+        
+        #the second trick is to make sure dimesions allign and for this we have broadcasting
+        #a^2 is (500,1)
+        #a*(b.T) is (500,5,000)
+        #b^2 is (5000,1)
+        #so all we have to do to make this work is transpose the last element
+        
+        a2=np.sum(X**2,axis=1).reshape(X.shape[0],1)
+        b2=np.sum(self.X_train**2,axis=1).reshape(1,-1)
+        ab=np.dot(X,self.X_train.T)
+        # print(a2.shape)
+        # print(b2.shape)
+        # print(ab.shape)
+        dists=np.sqrt(a2+b2-2*ab)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
