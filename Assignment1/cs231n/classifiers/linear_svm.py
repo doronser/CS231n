@@ -85,7 +85,7 @@ def svm_loss_vectorized(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     num_samples = y.shape[0]
-    # scores is NxD matrix where each row is a 1xD vector
+    # scores is NxC matrix where each row is a 1xD vector
     # of scores for a single training example
     scores = X @ W
 
@@ -113,8 +113,27 @@ def svm_loss_vectorized(W, X, y, reg):
     # loss.                                                                     #
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    
+    # X.T @ help_mat would give us the desired result
+    # each column in help_mat represents the the gradient of a single class, which is built in 2 steps: 
+    # 1. for training examples that don't correspond to the current column class, the gradient is their mean
+    # 2. for training examples that correspond to the current column class, the gradient is a weighted sum of examples in
+    # where the weight of every example is the number of wrong classes whose margin is bigger than 0.
 
-    pass
+    # the 1st gradient is the sum of all columns in the loss matrix with a positive margin
+    help_mat = loss_mat
+    help_mat[loss_mat > 0] = 1
+
+    #the 2nd gradient for each example is the sum of all classes with margin>1 times X
+    row_sum = np.sum(help_mat, axis=1)
+    help_mat[np.arange(num_samples),y] = -row_sum.T
+    
+    # multiply X by the help matrix to obtain the sum of relevant columns/rows
+    dW = X.T @ help_mat
+    dW /= num_samples
+     
+    #add the reg term
+    dW+= 2*reg*W
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
