@@ -84,8 +84,22 @@ def svm_loss_vectorized(W, X, y, reg):
     # result in loss.                                                           #
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    num_samples = y.shape[0]
+    # scores is NxD matrix where each row is a 1xD vector
+    # of scores for a single training example
+    scores = X @ W
 
-    pass
+    # true scores is a Nx1 vector of the true class score for each training example
+    true_scores = scores[np.arange(num_samples),y].reshape(num_samples,-1)
+    margin = scores - true_scores + 1
+    
+    # in order to transition from margin to loss, we need to remove negative values (just like max(0,margin) would)
+    # and make sure the correct class does not contribute to the loss
+    loss_mat = margin.clip(min=0) # max(0,margin) is equivalent to clipping the array with min=0
+    loss_mat[np.arange(num_samples),y] = 0 # the correct class should not contribute any loss
+    loss = np.sum(loss_mat) # sum up the loss matrix
+    loss /= num_samples # divide by N to average over Li
+    loss += reg * np.sum(W * W) # add the reg term
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
