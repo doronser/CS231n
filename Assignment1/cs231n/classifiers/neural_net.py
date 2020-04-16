@@ -80,7 +80,9 @@ class TwoLayerNet(object):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        H = X @ W1  # first layer
+        np.maximum(H, 0, H) # ReLu
+        scores = H @ W2
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -98,7 +100,14 @@ class TwoLayerNet(object):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        # SVM loss - Cross-entropy loss
+        num_train = X.shape[0]
+        scores -= np.max(scores) # reduce max value to 0 to avoid computing large exponents
+        P = np.exp(scores) / np.sum(np.exp(scores),axis=1).reshape(num_train,1) # convert score to probability
+        loss = np.mean( -np.log(P[np.arange(num_train),y])) # compute cross-entropy 
+        
+        # L2 regularization for W1 and W2
+        loss += reg * np.sum(W1 * W1) + reg * np.sum(W2 * W2)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
