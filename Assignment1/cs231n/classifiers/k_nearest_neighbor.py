@@ -144,7 +144,7 @@ class KNearestNeighbor(object):
         
         #the second trick is to make sure dimesions allign and for this we have broadcasting
         #a^2 is (500,1)
-        #a*(b.T) is (500,5,000)
+        #a*(b.T) is (500,5000)
         #b^2 is (5000,1)
         #so all we have to do to make this work is transpose the last element
         
