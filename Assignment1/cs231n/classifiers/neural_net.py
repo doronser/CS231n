@@ -80,9 +80,9 @@ class TwoLayerNet(object):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        H = X @ W1  # first layer
+        H = X @ W1 +b1  # first layer
         np.maximum(H, 0, H) # ReLu
-        scores = H @ W2
+        scores = H @ W2 + b2
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -100,7 +100,7 @@ class TwoLayerNet(object):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        # SVM loss - Cross-entropy loss
+        # Softmax loss - Cross-entropy loss
         num_train = X.shape[0]
         scores -= np.max(scores) # reduce max value to 0 to avoid computing large exponents
         P = np.exp(scores) / np.sum(np.exp(scores),axis=1).reshape(num_train,1) # convert score to probability
@@ -119,9 +119,23 @@ class TwoLayerNet(object):
         # grads['W1'] should store the gradient on W1, and be a matrix of same size #
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-        pass
-
+        
+        # using the chain rule we can derive: dloss/dscores = P -1(correct_class)
+        # Then we can recall that scores = W2 * H + b2 and calculate dW2 and db2
+        help_mat = np.zeros_like(P)
+        help_mat[np.arange(num_train),y] = 1
+        dl_dscore = (P - help_mat)/num_train
+        grads['W2'] = 2 * reg * W2 + (H.T @ dl_dscore)
+        grads['b2'] = np.sum(dl_dscore, axis=0)
+        
+        # using the chain rule again we can derive: dl_dW1 = dl/dscore * dscore/dH * dH/dW1
+        # where the first term is already calculated above and the rest are simple
+        # the gradient of the reLu term is the smae indicator times the inner derivative
+        dscore_dH = W2.T 
+        drelu = dl_dscore @ dscore_dH * (H>0) #derivative term up until the relu activation
+        grads['W1'] = 2 * reg * W1 + X.T @  drelu
+        grads['b1'] = np.sum(drelu * (H>0) , axis=0)
+        # grads['b1'] = 0
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         return loss, grads
@@ -165,8 +179,9 @@ class TwoLayerNet(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
-
+            idxs = np.random.choice(num_train,batch_size)
+            X_batch = X[idxs,:]
+            y_batch = y[idxs]
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
             # Compute loss and gradients using the current minibatch
@@ -180,8 +195,9 @@ class TwoLayerNet(object):
             # stored in the grads dictionary defined above.                         #
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-            pass
+            for p in self.params:
+              self.params[p] -= learning_rate * grads[p]
+ 
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -226,8 +242,10 @@ class TwoLayerNet(object):
         # TODO: Implement this function; it should be VERY simple!                #
         ###########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-        pass
+        H = X @ self.params['W1'] +self.params['b1']  # first layer
+        np.maximum(H, 0, H) # ReLu
+        scores = H @ self.params['W2'] +self.params['b2']       
+        y_pred = np.argmax(scores,axis=1)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
