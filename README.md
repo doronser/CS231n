@@ -12,18 +12,18 @@ The solutions are to the 2020 version of assignments (most notable differences a
 5. [Image Features](Assignment1/features.ipynb)
 
 ## Assignment 2
-1. Fully-connected Neural Network
-2. Batch Normalization
-3. Dropout
-4. Convolutional Networks
-5. TensorFlow on CIFAR-10
+1. [Fully-connected Neural Network](assignment2/FullyConnectedNets.ipynb)
+2. [Batch Normalization](assignment2/BatchNormalization.ipynb)
+3. [Dropout](assignment2/Dropout.ipynb)
+4. [Convolutional Networks](assignment2/ConvolutionalNetworks.ipynb)
+5. [TensorFlow on CIFAR-10](assignment2/TensorFlow.ipynb)
 
 ## Assignment 3
-1. Image Captioning with Vanilla RNNs
-2. SVM Classifier
-3. Network Visualization: Saliency maps, Class Visualization, and Fooling Images
-4. Style Transfer
-5. Generative Adversarial Networks
+1. [Image Captioning with Vanilla RNNs](assignment3/RNN_Captioning.ipynb)
+2. [Image Captioning with LSTMs](assignment3/LSTM_Captioning.ipynb)
+3. [Network Visualization: Saliency maps, Class Visualization, and Fooling Images](assignment3/NetworkVisualization-TensorFlow.ipynb)
+4. [Style Transfer](assignment3/StyleTransfer-TensorFlow.ipynb)
+5. [Generative Adversarial Networks](assignment3/Generative_Adversarial_Networks_TF.ipynb)
 
 ## License
 [MIT Open Source](https://choosealicense.com/licenses/mit/)
