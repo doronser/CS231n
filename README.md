@@ -5,11 +5,11 @@ I'm just another geek trying to learn computer vision from Stanford's CNN course
 The solutions are to the 2020 version of assignments (most notable differences are in [assignment 3](https://cs231n.github.io/assignments2020/assignment3/) )
 
 ## Assignment 1
-1. [KNN Classifier](../blob/master/Assignment1/knn.ipynb)
-2. [SVM Classifier](../blob/master/Assignment1/svm.ipynb)
-3. [SoftMax Classifier](../blob/master/Assignment1/softmax.ipynb)
-4. [2-Layer Neural Network](../blob/master/Assignment1/two_layer_net.ipynb)
-5. [Image Features](../blob/master/Assignment1/features.ipynb)
+1. [KNN Classifier](Assignment1/knn.ipynb)
+2. [SVM Classifier](Assignment1/svm.ipynb)
+3. [SoftMax Classifier](/Assignment1/softmax.ipynb)
+4. [2-Layer Neural Network](Assignment1/two_layer_net.ipynb)
+5. [Image Features](Assignment1/features.ipynb)
 
 ## Assignment 2
 1. Fully-connected Neural Network
